@@ -7,34 +7,58 @@ created: 2019-10-18
 
 import boto3
 import json
+from botocore.exceptions import ProfileNotFound
 
-# USER_ACCESS_KEY =
-# USER_SECRET_KEY =
-
+VALID_REGIONS = ['ap-south-1', 'eu-west-3', 'eu-west-2', 'eu-west-1', 'ap-northeast-2', 'ap-northeast-1', 'sa-east-1',
+                 'ca-central-1', 'ap-southeast-1', 'ap-southeast-2', 'eu-central-1', 'us-east-1', 'us-east-2',
+                 'us-west-1', 'us-west-2']
 CLIENT_POLICY_NAME = 's3ClientPolicy'
 DEFAULT_REGION = 'eu-central-1'
 
 
 def main():
-    bucket_region = input('Region (or enter to continue): ')
-    if bucket_region == '':
-        bucket_region = DEFAULT_REGION
-        print('--> Used default region "{}"'.format(bucket_region))
 
-    aws_profile = input('Aws profile name (or enter to continue): ')
-    if aws_profile != '':
-        boto3.setup_default_session(profile_name=aws_profile, region_name=bucket_region)  # idalab, knorke
-        s3_client = boto3.client('s3')
-        iam_client = boto3.client('iam')
-    else:
-        user_access_key = input('AWS Access Key ID: ')
-        user_secret_key = input('AWS Secret Access Key: ')
-        s3_client = boto3.client('s3', region_name=bucket_region,
-                                 aws_access_key_id=user_access_key,
-                                 aws_secret_access_key=user_secret_key)
-        iam_client = boto3.client('iam', region_name=bucket_region,
-                                 aws_access_key_id=user_access_key,
-                                 aws_secret_access_key=user_secret_key)
+    while True:
+        bucket_region = input('Region (or press enter for {}): '.format(DEFAULT_REGION))
+        if bucket_region == '':
+            bucket_region = DEFAULT_REGION
+            print('--> Used default region "{}"'.format(DEFAULT_REGION))
+            break
+        elif bucket_region not in VALID_REGIONS:
+            print('--> ValueError: Region "{}" is not available. Please try again.\n'
+                  'INFO: Valid regions are: {}'.format(bucket_region, VALID_REGIONS))
+            continue
+        else:
+            print('--> Used region "{}"'.format(bucket_region))
+            break
+
+    while True:
+        aws_profile = input('Aws profile name (or enter to continue): ')
+        if aws_profile != '':
+            try:
+                boto3.setup_default_session(profile_name=aws_profile, region_name=bucket_region)  # idalab, knorke
+                s3_client = boto3.client('s3')
+                iam_client = boto3.client('iam')
+                ec2_client = boto3.client('ec2')
+            except ProfileNotFound:
+                print('--> ProfileNotFoundError: profile "{}" does not exist. Please try again.\n'
+                      'INFO: You can check ~/.aws/config or ~/.aws/credentials for your profiles '
+                      'or add a new profile with "aws configure --profile <profile-name>"'.format(aws_profile))
+                continue
+
+        else:
+            user_access_key = input('AWS Access Key ID: ')
+            user_secret_key = input('AWS Secret Access Key: ')
+            s3_client = boto3.client('s3', region_name=bucket_region,
+                                     aws_access_key_id=user_access_key,
+                                     aws_secret_access_key=user_secret_key)
+            iam_client = boto3.client('iam', region_name=bucket_region,
+                                     aws_access_key_id=user_access_key,
+                                     aws_secret_access_key=user_secret_key)
+            ec2_client = boto3.client('ec2', region_name=bucket_region,
+                                     aws_access_key_id=user_access_key,
+                                     aws_secret_access_key=user_secret_key)
+            break
 
     bucket_name = input('Name of S3 bucket: ')
 
@@ -86,6 +110,6 @@ def main():
 
 
 if __name__ == '__main__':
-    print('INFO: Your AWS account should have permissions IAMFullAccess and AmazonS3FullAccess.')
-    print('--> Starting AWS S3 client script...')
+    print('INFO: Your AWS account should have permissions IAMFullAccess and AmazonS3FullAccess.\n'
+          '--> Starting AWS S3 client script...')
     main()
