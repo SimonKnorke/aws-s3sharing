@@ -1,45 +1,51 @@
-**Edit a file, create a new file, and clone from Bitbucket in under 2 minutes**
 
-When you're done, you can delete the content in this README and update the file with details for others getting started with your repository.
+# AWS helpers
 
-*We recommend that you open this README in another tab as you perform the tasks below. You can [watch our video](https://youtu.be/0ocf7u76WSo) for a full demo of all the steps in this tutorial. Open the video in a new tab to avoid leaving Bitbucket.*
+One Paragraph of project description goes here
 
----
+### Prerequisites
 
-## Edit a file
+What things you need:
 
-You’ll start by editing this README file to learn how to edit a file in Bitbucket.
 
-1. Click **Source** on the left side.
-2. Click the README.md link from the list of files.
-3. Click the **Edit** button.
-4. Delete the following text: *Delete this line to make a change to the README from Bitbucket.*
-5. After making your change, click **Commit** and then **Commit** again in the dialog. The commit page will open and you’ll see the change you just made.
-6. Go back to the **Source** page.
+- AWS account with permissions `S3FullAccess` and `IAMFullAccess`.
+> This is important since you want to create a new S3 bucket and an IAM user that has the appropriate permissions.
+- aws cli profile or aws credentials ready
+> Best practice would be to configure your aws profile with the aws-cli (command line interface). Read [this](https://docs.aws.amazon.com/cli/latest/userguide/cli-multiple-profiles.html) for more information.
+> `aws configure --profile "your-profile-name"`
 
----
 
-## Create a file
+### Installing
 
-Next, you’ll add a new file to this repository.
+Get your Python env ready
 
-1. Click the **New file** button at the top of the **Source** page.
-2. Give the file a filename of **contributors.txt**.
-3. Enter your name in the empty file space.
-4. Click **Commit** and then **Commit** again in the dialog.
-5. Go back to the **Source** page.
+```
+$ pipenv install
+``` 
 
-Before you move on, go ahead and explore the repository. You've already seen the **Source** page, but check out the **Commits**, **Branches**, and **Settings** pages.
+### Creating S3 bucket link + user with read/write only
 
----
+Execute the script `aws_S3_client_script.py`
 
-## Clone a repository
+```
+python aws_S3_client_script.py
+```
+Follow the instructions and enter the required information:
+```
+1) Region for your S3 bucket (eu-central-1 is default)
+2) Aws profile (optional) or Aws credentials
+3) Bucket name
+4) User name
+5) User password
+Continue?: Enter "y" for yes
+Done.
+```
+The script will also create a `user-name.txt` file to store the login information that you have to send to the client.
 
-Use these steps to clone from SourceTree, our client for using the repository command-line free. Cloning allows you to work on your files locally. If you don't yet have SourceTree, [download and install first](https://www.sourcetreeapp.com/). If you prefer to clone from the command line, see [Clone a repository](https://confluence.atlassian.com/x/4whODQ).
+## Authors
 
-1. You’ll see the clone button under the **Source** heading. Click that button.
-2. Now click **Check out in SourceTree**. You may need to create a SourceTree account or log in.
-3. When you see the **Clone New** dialog in SourceTree, update the destination path and name if you’d like to and then click **Clone**.
-4. Open the directory you just created to see your repository’s files.
+* **Simon Wohlfahrt** 
 
-Now that you're more familiar with your Bitbucket repository, go ahead and add a new file locally. You can [push your change back to Bitbucket with SourceTree](https://confluence.atlassian.com/x/iqyBMg), or you can [add, commit,](https://confluence.atlassian.com/x/8QhODQ) and [push from the command line](https://confluence.atlassian.com/x/NQ0zDQ).
+
+
+
