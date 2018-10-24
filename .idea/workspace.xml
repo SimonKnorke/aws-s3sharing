@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="995df49d-b068-4d21-96b3-497b253211e7" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/Pipfile" beforeDir="false" afterPath="$PROJECT_DIR$/Pipfile" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/aws_S3_client_script.py" beforeDir="false" afterPath="$PROJECT_DIR$/aws_S3_client_script.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -17,19 +17,19 @@
         <counts>
           <entry key="project.closed" value="3" />
           <entry key="project.open.time.4" value="1" />
-          <entry key="project.open.time.6" value="1" />
+          <entry key="project.open.time.6" value="2" />
           <entry key="project.open.time.7" value="1" />
-          <entry key="project.opened" value="3" />
+          <entry key="project.opened" value="4" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.extensions.edit">
         <counts>
-          <entry key="py" value="721" />
+          <entry key="py" value="1506" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.file.types.edit">
         <counts>
-          <entry key="Python" value="721" />
+          <entry key="Python" value="1506" />
         </counts>
       </usages-collector>
     </session>
@@ -39,11 +39,14 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/aws_S3_client_script.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="1050">
-              <caret line="70" column="9" lean-forward="true" selection-start-line="70" selection-start-column="9" selection-end-line="70" selection-end-column="9" />
+            <state relative-caret-position="276">
+              <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
               <folding>
                 <element signature="e#157#169#0" expanded="true" />
-                <marker date="1540230044101" expanded="true" signature="7008:7290" ph="..." />
+                <marker date="1540416968521" expanded="true" signature="3329:3565" ph="..." />
+                <marker date="1540416968521" expanded="true" signature="4318:5682" ph="..." />
+                <marker date="1540416968521" expanded="true" signature="6181:6606" ph="..." />
+                <marker date="1540416968521" expanded="true" signature="8620:8902" ph="..." />
               </folding>
             </state>
           </provider>
@@ -72,18 +75,16 @@
     <detection-done>true</detection-done>
     <sorting>DEFINITION_ORDER</sorting>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="-259" />
-    <option name="y" value="-818" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="y" value="23" />
     <option name="width" value="1440" />
-    <option name="height" value="810" />
+    <option name="height" value="812" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -95,6 +96,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -126,10 +128,10 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-259" y="-818" width="1440" height="810" extended-state="0" />
+    <frame x="0" y="23" width="1440" height="812" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25679544" />
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.26037195" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -161,11 +163,14 @@
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/aws_S3_client_script.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1050">
-          <caret line="70" column="9" lean-forward="true" selection-start-line="70" selection-start-column="9" selection-end-line="70" selection-end-column="9" />
+        <state relative-caret-position="276">
+          <caret line="49" lean-forward="true" selection-start-line="49" selection-end-line="49" />
           <folding>
             <element signature="e#157#169#0" expanded="true" />
-            <marker date="1540230044101" expanded="true" signature="7008:7290" ph="..." />
+            <marker date="1540416968521" expanded="true" signature="3329:3565" ph="..." />
+            <marker date="1540416968521" expanded="true" signature="4318:5682" ph="..." />
+            <marker date="1540416968521" expanded="true" signature="6181:6606" ph="..." />
+            <marker date="1540416968521" expanded="true" signature="8620:8902" ph="..." />
           </folding>
         </state>
       </provider>
