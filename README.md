@@ -1,7 +1,7 @@
 
-# AWS file share helper
+# AWS S3 file sharing
 
-This script should help you creating an environment to share files with your client via Amazon S3.
+This repository should help you creating an environment to share files with your client via Amazon S3.
 
 ### Prerequisites
 
@@ -12,7 +12,7 @@ What things you need:
 - aws cli profile or your aws credentials ready.
 
 > Best practice would be to configure your aws profile with the aws-cli (command line interface), so you won't have to enter your credentials as an input later.
-> `aws configure --profile "your-profile-name"`  
+> `aws configure --profile <your-profile-name>`  
 Read [this](https://docs.aws.amazon.com/cli/latest/userguide/cli-multiple-profiles.html) for more information.
 
 
@@ -23,12 +23,10 @@ Just get your Python env ready .
 
 `$ pipenv shell` 
 
-Then execute the script .  
+And execute the main script .  
 ```
-python aws_S3_client_script.py
+python main.py
 ```
-
-### Creating S3 bucket link + user with read/write only
 
 ### How the script works
 At first the script will request some input information from the User and checks the permissions. 
