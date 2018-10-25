@@ -5,11 +5,9 @@ author: Simon
 created: 2019-10-18
 """
 
-import boto3
 import json
 import re
-from botocore.exceptions import ClientError
-from botocore.exceptions import ProfileNotFound
+from aws_resource_helpers import *
 
 ACCOUNT_ALIAS = 'idalab'
 VALID_REGIONS = ['ap-south-1', 'eu-west-3', 'eu-west-2', 'eu-west-1', 'ap-northeast-2', 'ap-northeast-1', 'sa-east-1',
@@ -42,17 +40,17 @@ def main():
     bucket_name, bucket_already_exists = get_valid_bucket_name('Name of S3 bucket: ', all_bucket_names)
     user_name = get_valid_user_name('New User name (for bucket access): ', all_user_names)
 
-    print_password_policy(iam_client)
+    account_password_policy = get_password_policy(iam_client)
+    print_password_policy(account_password_policy)
+
     user_password = input('Set user password: ')
 
-    print('INFO: S3 bucket "{}" will be created in region "{}"'.format(bucket_name, bucket_region))
-    print('INFO: Iam user: "{}", password: "{}"'.format(user_name, user_password))
+    print_final_check(bucket_name, bucket_region, user_name, user_password)
 
     if continuation_prompt('Continue?', 'y'):
         create_s3_bucket(s3_client, bucket_name, bucket_region, bucket_already_exists)
         bucket_link = 'https://s3.console.aws.amazon.com/s3/buckets/{}/'.format(bucket_name)
 
-        # IAM USER STUFF
         response = iam_client.create_user(UserName=user_name)
         response = iam_client.create_login_profile(UserName=user_name, Password=user_password,
                                                    PasswordResetRequired=CLIENT_PASSWORD_RESET_REQUIRED)
@@ -101,62 +99,6 @@ def get_valid_region(prompt):
     return bucket_region
 
 
-def aws_login(prompt, bucket_region):
-    while True:
-        aws_profile = input(prompt)
-        if aws_profile == '\q':
-            print('--> Quit process...')
-            return None, None, None
-        elif aws_profile != '':
-            try:
-                boto3.setup_default_session(profile_name=aws_profile, region_name=bucket_region)  # idalab, knorke
-                s3_client = boto3.client('s3')
-                s3_resource = boto3.resource('s3')
-                iam_client = boto3.client('iam')
-                break
-            except ProfileNotFound:
-                print('ProfileNotFoundError: profile "{}" does not exist. Please try again.\n'
-                      'INFO: You can check ~/.aws/config or ~/.aws/credentials for your profiles '
-                      'or add a new profile with "aws configure --profile <profile-name>"'.format(aws_profile))
-                continue
-
-        else:
-            access_key = input('AWS Access Key ID: ')
-            secret_key = input('AWS Secret Access Key: ')
-            config_dict = {'region_name': bucket_region, 'aws_access_key_id': access_key, 'aws_secret_access_key': secret_key}
-            s3_client = boto3.client('s3', **config_dict)
-            s3_resource = boto3.resource('s3',  **config_dict)
-            iam_client = boto3.client('iam',  **config_dict)
-            break
-    return s3_client, s3_resource, iam_client
-
-
-def get_all_bucket_names(s3_resource):
-    try:
-        return [bucket.name for bucket in s3_resource.buckets.all()]
-    except ClientError as e:
-        if e.response["Error"]["Code"] == "AccessDenied":
-            print('ClientError (AccessDenied): You are not allowed to list the S3 buckets.'
-                  ' Ask admin to add you username to the IAM group!')
-        else:
-            raise e
-        print('--> Terminate process...')
-        return None
-
-
-def get_all_user_names(iam_client):
-    try:
-        return [key['UserName'] for key in iam_client.list_users()['Users']]
-    except ClientError as e:
-        if e.response["Error"]["Code"] == "AccessDenied":
-            print('ClientError (AccessDenied): You are not allowed to list users.'
-                  ' Ask admin to add you username to the IAM group!')
-        else:
-            raise e
-        print('--> Terminate process...')
-        return None
-
-
 def get_valid_bucket_name(prompt, all_bucket_names):
     bucket_already_exists = False
     while True:
@@ -192,28 +134,9 @@ def get_valid_user_name(prompt, all_user_names):
     return user_name
 
 
-def print_password_policy(iam_client):
-    try:
-        account_password_policy = iam_client.get_account_password_policy()['PasswordPolicy']
-        print('INFO!\tAccount password policy:')
-        for key in account_password_policy:
-            if account_password_policy[key]:
-                print('\t{}: {}'.format(key, account_password_policy[key]))
-    except ClientError as e:
-        if e.response["Error"]["Code"] == "NoSuchEntity":
-            print('INFO: There is no password policy, so you can type what you want...')
-        else:
-            raise e
-
-
-# S3 BUCKET STUFF
-def create_s3_bucket(s3_client, bucket_name, bucket_region, bucket_already_exists):
-    if not bucket_already_exists:
-        try:
-            response = s3_client.create_bucket(Bucket=bucket_name,
-                                               CreateBucketConfiguration={'LocationConstraint': bucket_region})
-        except ClientError as e:
-            raise e
+def print_final_check(bucket_name, bucket_region, user_name, user_password):
+    print('FINAL CHECK:\tS3 bucket "{}" will be created in region "{}".'.format(bucket_name, bucket_region))
+    print('\t\tIam User: "{}", User password: "{}"'.format(user_name, user_password))
 
 
 def create_bucket_user_policy(bucket_name):

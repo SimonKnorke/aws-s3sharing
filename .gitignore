@@ -1,4 +1,6 @@
 .venv
 .idea
-*.txt
 .DS_Store
+
+*.txt
+*.json
