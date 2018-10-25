@@ -9,15 +9,14 @@ import json
 import re
 from aws_resource_helpers import *
 
-ACCOUNT_ALIAS = 'idalab'
 VALID_REGIONS = ['ap-south-1', 'eu-west-3', 'eu-west-2', 'eu-west-1', 'ap-northeast-2', 'ap-northeast-1', 'sa-east-1',
                  'ca-central-1', 'ap-southeast-1', 'ap-southeast-2', 'eu-central-1', 'us-east-1', 'us-east-2',
                  'us-west-1', 'us-west-2']
-CLIENT_POLICY_NAME = 's3ClientPolicy'
-CLIENT_PASSWORD_RESET_REQUIRED = False
 DEFAULT_REGION = 'eu-central-1'
 BUCKET_NAME_PATTERN = '(?=^.{3,63}$)(?!^(\d+\.)+\d+$)' \
                       '(^(([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])\.)*([a-z0-9]|[a-z0-9][a-z0-9\-]*[a-z0-9])$)'
+CLIENT_POLICY_NAME = 's3ClientPolicy'
+CLIENT_PASSWORD_RESET_REQUIRED = False
 
 
 def main():
@@ -59,8 +58,8 @@ def main():
                                               UserName=user_name)
 
         login_filename = '{}_login.txt'.format(user_name)
-        response_string = 'Link to bucket: {}\nAccount alias: {}\nIAM User name: {}\nPassword: {}'.format(
-            bucket_link, ACCOUNT_ALIAS, user_name, user_password)
+        response_string = 'Link to bucket: {}\nIAM User name: {}\nPassword: {}'.format(
+            bucket_link, user_name, user_password)
 
         print('--> Successfully created S3 bucket and IAM User. Created login file "{}"'.format(login_filename))
         print(response_string)
