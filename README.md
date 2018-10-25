@@ -7,7 +7,7 @@ This repository will help you to create an environment for file sharing with you
 
 What things you need:
 
-- AWS User account with sufficient permissions. Whether being added to IAM group `S3ShareGroup` or you have permissions `S3FullAccess` and `IAMFullAccess` anyway (e.g. as an Administrator).
+- AWS User account with sufficient permissions. Whether being added to IAM group `S3ShareGroup` or you have permissions anyway (e.g. as an Administrator). The exact permissions are further below.
 
 - named aws profile stored in the config and credentials files or your aws credentials within range.
 
@@ -30,8 +30,8 @@ python main.py
 
 ### How does the script work?
 
-The first step of the script is to get input information from the User and to check all required permissions. 
-In the second part it really creates the AWS resources.
+The first step of the script is to get input information from the User and to check all required permissions.  
+In the second part it actually creates the AWS resources.
 
 ##### First part: User input
 1) Region for your S3 bucket (eu-central-1 is default) .  
@@ -66,7 +66,7 @@ These permissions should be bundled in an IAM group that can then be attached to
 
 ### What is the client allowed to do?
 
-The permission policy of the client looks as follows:
+The permission policy of the created client user looks as follows:
 ```json
 {
     "Version": "2012-10-17",
@@ -91,7 +91,7 @@ The permission policy of the client looks as follows:
 }
 ```
 
-That means the client is only allowed to see the <client-folder> and to put, get or delete the objects in <client-folder>.
+Consequently the client is only allowed to see the <client-folder> and to put, get or delete the objects in <client-folder>.
 
 ## Authors
 
