@@ -1,5 +1,5 @@
 """"
-script to create new S3 bucket and iam_client user with read write permission on this folder (and nothing else)
+script to create new S3 bucket and iam_client user with read write permission on this folder only
 
 author: Simon
 created: 2019-10-18
@@ -27,6 +27,7 @@ def main():
     bucket_region = get_valid_region('Region (or press enter for {}): '.format(DEFAULT_REGION))
     if bucket_region is None:
         return
+
     s3_client, s3_resource, iam_client = aws_login('Aws profile name (or enter to skip): ', bucket_region)
     if s3_client is None:
         return
@@ -36,7 +37,7 @@ def main():
     if all_bucket_names is None or all_user_names is None:
         return
 
-    bucket_name, bucket_already_exists = get_valid_bucket_name('Name of S3 bucket: ', all_bucket_names)
+    bucket_name, bucket_already_exists = get_valid_bucket_name('Name of S3 bucket: ', all_bucket_names, s3_client)
     user_name = get_valid_user_name('New User name (for bucket access): ', all_user_names)
 
     account_password_policy = get_password_policy(iam_client)
@@ -47,7 +48,10 @@ def main():
     print_final_check(bucket_name, bucket_region, user_name, user_password)
 
     if continuation_prompt('Continue?', 'y'):
-        create_s3_bucket(s3_client, bucket_name, bucket_region, bucket_already_exists)
+        response = create_s3_bucket(s3_client, bucket_name, bucket_region, bucket_already_exists)
+        if response is None:
+            return
+
         bucket_link = 'https://s3.console.aws.amazon.com/s3/buckets/{}/'.format(bucket_name)
 
         response = iam_client.create_user(UserName=user_name)
@@ -98,8 +102,9 @@ def get_valid_region(prompt):
     return bucket_region
 
 
-def get_valid_bucket_name(prompt, all_bucket_names):
+def get_valid_bucket_name(prompt, all_bucket_names, s3_client):
     bucket_already_exists = False
+    print('INFO:\tYou can choose existing bucket or create a new one (name has to be unique across AWS!).')
     while True:
         bucket_name = input(prompt)
         if bucket_name in all_bucket_names:
@@ -112,6 +117,9 @@ def get_valid_bucket_name(prompt, all_bucket_names):
                 continue
         elif not re.match(BUCKET_NAME_PATTERN, bucket_name):
             print('InvalidBucketNameError: The specified bucket name "{}" is not valid. Please try again!'.format(bucket_name))
+            continue
+        elif bucket_is_not_unique(s3_client, bucket_name):
+            print('BucketAlreadyExistsError: Your bucket already exists across the AWS platform. Please try again!')
             continue
         else:
             break

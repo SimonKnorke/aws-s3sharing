@@ -37,7 +37,7 @@ In the second part it actually creates the AWS resources.
 ##### First part: User input
 1) Region for your S3 bucket (eu-central-1 is default) .  
 2) Aws profile (optional) or Aws credentials. If you skip the profile option you have to enter your credentials (`Access Key ID`, `Secret Access Key`).   
-3) Bucket name: Here enter the name of the new bucket you want to use for data sharing with a client. In case you already created a bucket that you want to use, type its name and pass the warning with "y".   
+3) Bucket name: Remember that this name must be unique across all existing bucket names in Amazon S3 and comply with DNS naming conventions. Read [this](https://docs.aws.amazon.com/AmazonS3/latest/dev/BucketRestrictions.html) for more information about bucket naming. In case you already created a bucket that you want to use, just type its name and pass the warning with "y".   
 4) User name: This is the IAM user account for your client, e.g. "DB-demo-client".   
 5) User password: Set the password according to the printed policy, if there exists one.  
 6) Continue?: Last confirmation by the User before the AWS resources are actually created.

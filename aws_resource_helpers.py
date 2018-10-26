@@ -103,10 +103,30 @@ def print_password_policy(account_password_policy):
 #            raise e
 
 
+def bucket_is_not_unique(s3_client, bucket_name):
+    try:
+        response = s3_client.head_bucket(Bucket=bucket_name)
+        return True
+    except ClientError as e:
+        if e.response["Error"]["Code"] != 403:
+            raise e
+        return False
+
+
 def create_s3_bucket(s3_client, bucket_name, bucket_region, bucket_already_exists):
     if not bucket_already_exists:
         try:
             response = s3_client.create_bucket(Bucket=bucket_name,
                                                CreateBucketConfiguration={'LocationConstraint': bucket_region})
+            return response
         except ClientError as e:
-            raise e
+            if e.response["Error"]["Code"] == "BucketAlreadyExists":
+                print('ClientError (BucketAlreadyExists): Your bucket already exists across the AWS platform.'
+                      ' Please try again with a different name!')
+            else:
+                raise e
+            print('--> Terminate process...')
+            s3_client.head_bucket(Bucket=bucket_name)
+
+
+            return None
