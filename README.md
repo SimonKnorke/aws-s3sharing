@@ -18,12 +18,13 @@ Read [this](https://docs.aws.amazon.com/cli/latest/userguide/cli-multiple-profil
 
 ### Run the script
 
-Get your Python env ready .  
-`$ pipenv install ` 
+Get your Python env ready
+```
+$ pipenv install
+$ pipenv shell
+```
 
-`$ pipenv shell` 
-
-And run the main script .  
+And run the main script  
 ```
 python main.py
 ```
@@ -53,8 +54,9 @@ Done! Bucket link and user login information will be printed and also stored as 
 To successfully execute the script you need the following permissions on AWS resources:
 
 ##### IAM:       
--  CreateUser
+- CreateUser
 - ListUsers
+- GetAccountPasswordPolicy
 - CreateLoginProfile
 - PutUserPolicy
 
@@ -63,6 +65,48 @@ To successfully execute the script you need the following permissions on AWS res
 - ListAllMyBuckets
 
 These permissions should be bundled in an IAM group that can then be attached to the corresponding User names.
+The policy in json-format looks like this:
+```json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "VisualEditor0",
+            "Effect": "Allow",
+            "Action": [
+                "s3:CreateBucket",
+                "iam:CreateUser"
+            ],
+            "Resource": [
+                "arn:aws:s3:::*",
+                "arn:aws:iam::*:user/*"
+            ]
+        },
+        {
+            "Sid": "VisualEditor1",
+            "Effect": "Allow",
+            "Action": [
+                "iam:GetAccountPasswordPolicy",
+                "s3:ListAllMyBuckets",
+                "iam:ListUsers"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "VisualEditor2",
+            "Effect": "Allow",
+            "Action": "iam:CreateLoginProfile",
+            "Resource": "arn:aws:iam::*:user/*"
+        },
+        {
+            "Sid": "VisualEditor3",
+            "Effect": "Allow",
+            "Action": "iam:PutUserPolicy",
+            "Resource": "arn:aws:iam::*:user/*"
+        }
+    ]
+}
+```
 
 ### What is the client allowed to do?
 
