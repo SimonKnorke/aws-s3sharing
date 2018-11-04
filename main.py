@@ -80,8 +80,8 @@ def continuation_prompt(prompt, required_answer):
     else:
         print('--> Terminate process...')
         return False
-        
-        
+
+
 def get_valid_region(prompt):
     while True:
         bucket_region = input(prompt)
@@ -108,10 +108,10 @@ def get_valid_bucket_name(prompt, all_bucket_names, s3_client):
     while True:
         bucket_name = input(prompt)
         if bucket_name in all_bucket_names:
-            answer = input('WARNING: Bucket "{}" already exists. Want to continue with existing one? (y/n): '.format(bucket_name))
+            answer = input('WARNING: Bucket "{}" already exists. Continue with existing one?\n(y/n): '.format(bucket_name))
             if answer == 'y':
                 bucket_already_exists = True
-                print('--> Used existing bucket "{}". Will not create new one'.format(bucket_name))
+                print('--> Used existing bucket "{}"...'.format(bucket_name))
                 break
             else:
                 continue
@@ -148,7 +148,7 @@ def print_final_check(bucket_name, bucket_region, user_name, user_password):
 
 def create_bucket_user_policy(bucket_name):
     """USER POLICY: Allow 1) ListBucket option to folder and 2) put, get, delete option to objects inside"""
-    
+
     policy_dict = {'Version': '2012-10-17',
                    'Statement': [{'Sid': 'VisualEditor0',
                                   'Effect': 'Allow',

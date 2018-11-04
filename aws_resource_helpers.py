@@ -104,13 +104,25 @@ def print_password_policy(account_password_policy):
 
 
 def bucket_is_not_unique(s3_client, bucket_name):
+    """HEAD Bucket: useful to determine if a bucket exists and you have permission to access it.
+    Error Codes: 200 OK, 404 Not Found and 403 Forbidden"""
     try:
-        response = s3_client.head_bucket(Bucket=bucket_name)
+        response = s3_client.head_bucket(Bucket=bucket_name)  # 200 OK
         return True
-    except ClientError as e:
-        if e.response["Error"]["Code"] != 403:
-            raise e
-        return False
+    except ClientError as e: # 403, 404
+        error_code, error_message = e.response["Error"]["Code"], e.response["Error"]["Message"]
+        print('--> Check bucket name... --> Code {}, "{}"'.format(error_code, error_message))
+        if error_code == '403': # Forbidden
+            return True
+        else:
+            return False # Not Found
+
+        #if e.response["Error"]["Code"] != 200:
+        #    print('--> BUCKET CHECK: Bucket does not exist ')
+        #    print(e.response["Error"].keys())
+        #    print('INFO: Error Code is {} (not 403)'.format(e.response["Error"]["Code"]))
+            #raise e
+
 
 
 def create_s3_bucket(s3_client, bucket_name, bucket_region, bucket_already_exists):
